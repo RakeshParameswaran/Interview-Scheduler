@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<br>
+<br>
+<center>
+<h1> Interview Scheduler </h1>
+
+    <button type="button" class= "button_style_for_list"><a href="{% url 'interviewer' %}" style="color: #5f6c9b;">Add Interviewer</a></button>
+    <button type="button" class="button_style_for_list"><a href="{% url 'student' %}" style="color: #5f6c9b;">Add Student</a></button>
+    <button type="button" class="button_style_for_list"><a href="{% url  'schedule' %}" style="color: #5f6c9b;">Check Availability </a></button>
+    
+    </center>
+
+{% endblock %}

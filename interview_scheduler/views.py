@@ -1,0 +1,113 @@
+from django.shortcuts import render
+from django.shortcuts import render, reverse, redirect
+from django.http import HttpResponseRedirect
+from .models import Student, Interviewer
+from .forms import StudentsForm, InterviewerForm
+from django.views.generic import CreateView, ListView
+# Create your views here.
+
+def homepage(request):
+    return render(request, "homepage.html")
+
+class StudentAdd(CreateView):
+    model = Student
+    template_name = 'student_form.html'
+    form_class = StudentsForm
+
+
+    def form_valid(self, form):
+        product = Student()
+        product.first_name = form.cleaned_data['first_name']
+        product.last_name = form.cleaned_data['last_name']
+        product.date = form.cleaned_data['date']
+        product.from_date = form.cleaned_data['from_date']
+        product.to_date = form.cleaned_data['to_date']
+        product.save()
+
+        return redirect('student')
+
+class InterviewerAdd(CreateView):
+    model = Interviewer
+    template_name = 'interviewer_form.html'
+    form_class = InterviewerForm
+
+
+    def form_valid(self, form):
+        product = Interviewer()
+        product.first_name = form.cleaned_data['first_name']
+        product.last_name = form.cleaned_data['last_name']
+        product.date = form.cleaned_data['date']
+        product.from_date = form.cleaned_data['from_date']
+        product.to_date = form.cleaned_data['to_date']
+        product.save()
+
+        return redirect('interviewer')
+
+class ScheduleView(ListView):
+    template_name ='scheduleview.html'
+    context_object_name = 'schedule'
+    model = Interviewer
+
+    def get_context_data(self, **kwargs):
+        context = super(ScheduleView, self).get_context_data(**kwargs)
+        interviewer = Interviewer.objects.all()
+        student =  Student.objects.all()
+        context.update({'interviewer' : interviewer})
+        context.update({'student':student})
+        return context
+
+    def get_queryset(self):
+        result = super(ScheduleView, self).get_queryset()
+        s = self.request.GET.get('s')
+        i = self.request.GET.get('i')
+        print(s, i)
+        a = []
+        c = []
+        result = ''
+        time_dict = {'13':'1', '14':'2', '15':'3', '16':'4', '17':'5', '18':'6', '19' : '7'}
+        if s and i:
+            i_ob = Interviewer.objects.filter(id = i).values('from_date', 'to_date', 'date')
+            s_ob = Student.objects.filter(id = s).values('from_date', 'to_date', 'date')
+            print(s_ob, i_ob)
+
+            for k in i_ob:
+                student_from_date = k['from_date']
+                student_to_date = k['to_date']
+                student_date = k['date']
+            for j in s_ob:
+                interviewer_from_date = j['from_date']
+                interviewer_to_date = j['to_date']
+                interviewer_date = j['date']
+                
+            for i in range(int(student_from_date), int(student_to_date)):
+                k = i+1
+                if str(i) in time_dict.keys():
+                    i = time_dict[str(i)]
+                if str(k) in time_dict.keys():
+                    k = time_dict[str(k)]
+                    print("k", k)
+                a.append((int(i),int(k)))
+            print("a", a)
+            
+            for i in range(int(interviewer_from_date), int(interviewer_to_date)):
+                k = i+1
+                print(time_dict.keys())
+                if str(i) in time_dict.keys():
+                    i = time_dict[str(i)]
+                if str(k) in time_dict.keys():
+                    k = time_dict[str(k)]
+                    print("k", k)
+                c.append((int(i),int(k)))
+            print("c", c)  
+
+            print(interviewer_date, student_date)
+    
+            if str(interviewer_date) == str(student_date):
+                print("here")
+                result = [sub_list for sub_list in a if sub_list in c]
+                print(result)
+            else: 
+                result = []
+            if result == []:
+                result = 'The timings of both student and interviewer does not match'
+        return result

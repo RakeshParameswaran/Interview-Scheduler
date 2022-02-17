@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<!-- <form id="searchform" action="{% url 'schedule' %}" method="get" class="newsletter" accept_charset="utf-8">
+    <label>s_id</label>  <input class="searchfield" type="search" placeholder="Search here..." required="" name="s" type="text" style="border-style:inherit;">
+    <label>i_id</label> <input class="searchfield" type="search" placeholder="Search here..." required="" name="i" type="text" style="border-style:inherit;">
+    <button class="form-control btn" value=""><span class="fa fa-search" ></span></button>
+</form> -->
+
+<div class="container">
+    <h1>Check available time slots</h1>
+    <form action="{% url 'schedule' %}" method="get">
+        {% csrf_token %}
+    <div class="form-group">
+        <label>Student ID</label> <input class="searchfield" type="search" placeholder="Enter Student ID" required="" name="s" type="text" style="border-style:groove;">
+        <label>Interviewer ID</label> <input class="searchfield" type="search" placeholder="Enter Interviewer ID" required="" name="i" type="text" style="border-style:groove;"> 
+    </div>
+    <div class="form-group">
+        <input class="btn btn-success" type="submit" value="Submit">
+        <button class="btn btn-success"><a href="{% url  'homepage' %}" style="color: aliceblue;">Back to home</a></button>
+    </div>
+    </form>
+
+    
+
+<br/>
+
+    {% if schedule %}
+        <p class="p1">{{schedule}}</p>
+    {% endif %}
+
+    <br/>
+
+<div class="row">
+    <div class="column">
+    <center><caption>Student Data</caption></center>
+    <table>
+        
+    <tr>
+        <th>Student_id</th>
+        <th>Student Name</th> 
+    </tr>
+    {% for q in student %}
+        <tr>
+            <td>{{q.id}}</td>
+            <td>{{q.first_name}}</td>
+        </tr>
+    {% endfor %}
+    </table>
+    </div>
+    <div class="column">
+        <center><caption>Interviewer Data</caption></center>
+    <table>
+    <tr>
+        <th>Interviewer_id</th>
+        <th>Interviewer_id Name</th> 
+    </tr>
+    {% for k in interviewer %}
+        <tr>
+            <td>{{k.id}}</td>
+            <td>{{k.first_name}}</td>
+        </tr>
+    {% endfor %}
+</table>
+</div>
+</div>
+</div>
+
+{% endblock %}
+
+
+
+
