@@ -1,12 +1,6 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<!-- <form id="searchform" action="{% url 'schedule' %}" method="get" class="newsletter" accept_charset="utf-8">
-    <label>s_id</label>  <input class="searchfield" type="search" placeholder="Search here..." required="" name="s" type="text" style="border-style:inherit;">
-    <label>i_id</label> <input class="searchfield" type="search" placeholder="Search here..." required="" name="i" type="text" style="border-style:inherit;">
-    <button class="form-control btn" value=""><span class="fa fa-search" ></span></button>
-</form> -->
-
 <div class="container">
     <h1>Check available time slots</h1>
     <form action="{% url 'schedule' %}" method="get">

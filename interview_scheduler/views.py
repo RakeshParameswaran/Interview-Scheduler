@@ -16,13 +16,13 @@ class StudentAdd(CreateView):
 
 
     def form_valid(self, form):
-        product = Student()
-        product.first_name = form.cleaned_data['first_name']
-        product.last_name = form.cleaned_data['last_name']
-        product.date = form.cleaned_data['date']
-        product.from_date = form.cleaned_data['from_date']
-        product.to_date = form.cleaned_data['to_date']
-        product.save()
+        student = Student()
+        student.first_name = form.cleaned_data['first_name']
+        student.last_name = form.cleaned_data['last_name']
+        student.date = form.cleaned_data['date']
+        student.from_date = form.cleaned_data['from_date']
+        student.to_date = form.cleaned_data['to_date']
+        student.save()
 
         return redirect('student')
 
@@ -33,13 +33,13 @@ class InterviewerAdd(CreateView):
 
 
     def form_valid(self, form):
-        product = Interviewer()
-        product.first_name = form.cleaned_data['first_name']
-        product.last_name = form.cleaned_data['last_name']
-        product.date = form.cleaned_data['date']
-        product.from_date = form.cleaned_data['from_date']
-        product.to_date = form.cleaned_data['to_date']
-        product.save()
+        interviewer = Interviewer()
+        interviewer.first_name = form.cleaned_data['first_name']
+        interviewer.last_name = form.cleaned_data['last_name']
+        interviewer.date = form.cleaned_data['date']
+        interviewer.from_date = form.cleaned_data['from_date']
+        interviewer.to_date = form.cleaned_data['to_date']
+        interviewer.save()
 
         return redirect('interviewer')
 
@@ -60,7 +60,7 @@ class ScheduleView(ListView):
         result = super(ScheduleView, self).get_queryset()
         s = self.request.GET.get('s')
         i = self.request.GET.get('i')
-        print(s, i)
+        # print(s, i)
         a = []
         c = []
         result = ''
@@ -68,7 +68,7 @@ class ScheduleView(ListView):
         if s and i:
             i_ob = Interviewer.objects.filter(id = i).values('from_date', 'to_date', 'date')
             s_ob = Student.objects.filter(id = s).values('from_date', 'to_date', 'date')
-            print(s_ob, i_ob)
+            # print(s_ob, i_ob)
 
             for k in i_ob:
                 student_from_date = k['from_date']
@@ -86,8 +86,8 @@ class ScheduleView(ListView):
                 if str(k) in time_dict.keys():
                     k = time_dict[str(k)]
                     print("k", k)
-                a.append((int(i),int(k)))
-            print("a", a)
+                a.append((int(i), int(k)))
+            # print("a", a)
             
             for i in range(int(interviewer_from_date), int(interviewer_to_date)):
                 k = i+1
@@ -97,17 +97,13 @@ class ScheduleView(ListView):
                 if str(k) in time_dict.keys():
                     k = time_dict[str(k)]
                     print("k", k)
-                c.append((int(i),int(k)))
-            print("c", c)  
+                c.append((int(i), int(k)))
+            # print("c", c)  
 
-            print(interviewer_date, student_date)
+            # print(interviewer_date, student_date)
     
             if str(interviewer_date) == str(student_date):
-                print("here")
                 result = [sub_list for sub_list in a if sub_list in c]
-                print(result)
             else: 
-                result = []
-            if result == []:
                 result = 'The timings of both student and interviewer does not match'
         return result
