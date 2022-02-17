@@ -17,6 +17,7 @@ from django.contrib import admin
 from django.urls import path
 from interview_scheduler import views
 
+#urls to navigate upon pages
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.homepage, name = 'homepage' ),

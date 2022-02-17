@@ -6,9 +6,13 @@ from .forms import StudentsForm, InterviewerForm
 from django.views.generic import CreateView, ListView
 # Create your views here.
 
+
+# Contains 3 buttons to navigate to various pages.
 def homepage(request):
     return render(request, "homepage.html")
 
+
+# Class based views to add student information and availabilty to models
 class StudentAdd(CreateView):
     model = Student
     template_name = 'student_form.html'
@@ -26,6 +30,8 @@ class StudentAdd(CreateView):
 
         return redirect('student')
 
+
+# Class based views to add interviewer information and availabilty to models.
 class InterviewerAdd(CreateView):
     model = Interviewer
     template_name = 'interviewer_form.html'
@@ -43,6 +49,8 @@ class InterviewerAdd(CreateView):
 
         return redirect('interviewer')
 
+
+# Class based view to list the timings available for student and interviewer to conduct the interview.
 class ScheduleView(ListView):
     template_name ='scheduleview.html'
     context_object_name = 'schedule'
@@ -60,7 +68,6 @@ class ScheduleView(ListView):
         result = super(ScheduleView, self).get_queryset()
         s = self.request.GET.get('s')
         i = self.request.GET.get('i')
-        # print(s, i)
         a = []
         c = []
         result = ''
@@ -68,7 +75,6 @@ class ScheduleView(ListView):
         if s and i:
             i_ob = Interviewer.objects.filter(id = i).values('from_date', 'to_date', 'date')
             s_ob = Student.objects.filter(id = s).values('from_date', 'to_date', 'date')
-            # print(s_ob, i_ob)
 
             for k in i_ob:
                 student_from_date = k['from_date']
@@ -87,7 +93,6 @@ class ScheduleView(ListView):
                     k = time_dict[str(k)]
                     print("k", k)
                 a.append((int(i), int(k)))
-            # print("a", a)
             
             for i in range(int(interviewer_from_date), int(interviewer_to_date)):
                 k = i+1
@@ -98,9 +103,6 @@ class ScheduleView(ListView):
                     k = time_dict[str(k)]
                     print("k", k)
                 c.append((int(i), int(k)))
-            # print("c", c)  
-
-            # print(interviewer_date, student_date)
     
             if str(interviewer_date) == str(student_date):
                 result = [sub_list for sub_list in a if sub_list in c]
